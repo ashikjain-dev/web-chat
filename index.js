@@ -18,10 +18,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-io.on("connect", (socket) => {
-  console.log(socket.id);
-  console.info("user has joined the chat");
-});
 //logging method and routes
 app.use((req, res, next) => {
   console.info(`${req.method} --> ${req.originalUrl}`);
@@ -41,6 +37,29 @@ app.get("/social", (req, res) => {
 app.get("/cricket", (req, res) => {
   res.render("cricket", { title: "cricket-chat🗨️" });
 });
+//name space for different rooms
+const tech = io.of("/tech");
+//events and listeners for socket.io
+tech.on("connect", (socket) => {
+  console.log(socket.id);
+  console.info("user has joined the chat");
+  socket.on("userConnected", (data) => {
+    socket.join(data.room);
+    socket.broadcast
+      .to(data.room)
+      .emit("newUserMessage", "A new user has joined!");
+  });
+  socket.on("getMessage", (data) => {
+    const room = data.room;
+    const value = data.value;
+
+    tech.to(room).emit("postMessage", value);
+  });
+  socket.on("disconnect", () => {
+    console.log("user has been disconnected");
+  });
+});
+
 httpServer.listen(PORT, () => {
   console.info(`The server is up and running on ${PORT}`);
 });
