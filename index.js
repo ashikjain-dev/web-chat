@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 });
 //HOME ROUTE /
 app.use("/", (req, res) => {
-  res.send("hello world");
+  res.render("index", { title: "Web chat🗨️" });
 });
 httpServer.listen(PORT, () => {
   console.info(`The server is up and running on ${PORT}`);
