@@ -41,7 +41,6 @@ app.get("/cricket", (req, res) => {
 const tech = io.of("/tech");
 //events and listeners for socket.io
 tech.on("connect", (socket) => {
-  console.log(socket.id);
   console.info("user has joined the chat");
   socket.on("userConnected", (data) => {
     socket.join(data.room);
