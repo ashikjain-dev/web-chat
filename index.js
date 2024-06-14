@@ -28,6 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 //HOME ROUTE /
+
 app.get("/", (req, res) => {
   res.render("index", { title: "Web chat🗨️" });
 });
